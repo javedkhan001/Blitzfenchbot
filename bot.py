@@ -143,7 +143,8 @@ def start_bot():
         except Exception as e:
             print(f"Polling error: {e}")
             time.sleep(3)
-
 if __name__ == "__main__":
     threading.Thread(target=run_http_server, daemon=True).start()
-    start_bot()
+
+
+    
