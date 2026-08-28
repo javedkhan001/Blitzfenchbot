@@ -1,5 +1,6 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
+import os
 import threading
 import time
 import requests
@@ -7,7 +8,7 @@ import phonenumbers
 from phonenumbers import geocoder, carrier
 
 # 1. Aapka Bot Token
-BOT_TOKEN = "8881019537:AAHSTS23C00M_NBVMkLyCfzh_xZmqaDPmjg"
+BOT_TOKEN = os.getenv("BOT_TOKEN", "8881019537:AAHSTS23C00M_NBVMkLyCfzh_xZmqaDPmjg")
 
 # 2. Aapki Admin User ID
 ADMIN_ID = 6341110642
@@ -16,7 +17,7 @@ ADMIN_ID = 6341110642
 CHANNEL_USERNAME = "@blitzfetch_official"
 
 # -------------------------------------------------------------------
-# Dummy HTTP Server (Port 8000 for 24/7 Hosting Platforms like Render)
+# Dynamic Port HTTP Server for Render
 # -------------------------------------------------------------------
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -26,7 +27,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(b"BlitzFetch Bot is running smoothly!")
 
 def run_http_server():
-    server_address = ("", 8000)
+    port = int(os.environ.get("PORT", 8000))
+    server_address = ("", port)
     httpd = HTTPServer(server_address, SimpleHTTPRequestHandler)
     httpd.serve_forever()
 
@@ -52,7 +54,6 @@ def send_message(chat_id, text, reply_markup=None, parse_mode=None):
         return None
 
 def is_user_subscribed(user_id):
-    """Admin ke liye check skip karega, normal users ke liye channel check karega"""
     if user_id == ADMIN_ID:
         return True
 
